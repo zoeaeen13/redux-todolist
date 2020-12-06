@@ -3,12 +3,21 @@ import { Wrapper, TodosWrapper } from "./Wrappers";
 import { TodoItem } from "./Todoitem";
 import { useState } from "react";
 import { TypeContext } from "../contexts";
+import { useSelector, useDispatch } from "react-redux";
+import { getTodos } from "../redux/selectors";
+import {
+  addTodo,
+  deleteTodo,
+  toggleTodo,
+  editTodo,
+  clearFinishedTodos,
+} from "../redux/actions";
 
-let id = 1;
 function App() {
+  const todos = useSelector(getTodos);
+  const dispatch = useDispatch();
   const [selectedType, setSelectType] = useState("All");
   const [value, setValue] = useState("");
-  const [todos, setTodos] = useState([]);
 
   // handle input change
   function handleInputChnage(e) {
@@ -19,106 +28,80 @@ function App() {
   function handleAddTodo(e) {
     e.preventDefault();
     if (value !== "") {
-      setTodos([
-        {
-          id,
-          content: value,
-          isDone: false,
-          isShowed: selectedType !== "Completed",
-        },
-        ...todos,
-      ]);
-
-      id += 1;
+      dispatch(addTodo(value, false, selectedType !== "Completed"));
       setValue("");
     }
   }
 
   // delete todo
   function handleDeleteTodo(id) {
-    setTodos(todos.filter((todo) => todo.id !== id));
+    dispatch(deleteTodo(id));
   }
 
-  // todo toggle
+  // toggle todo
   function handleToggleTodo(id) {
-    setTodos(
-      todos.map((todo) => {
-        if (todo.id !== id) return todo;
-        return {
-          ...todo,
-          isDone: !todo.isDone,
-        };
-      })
-    );
+    dispatch(toggleTodo(id));
   }
 
   // edit todo
   function handlgeEditTodo(e) {
-    setTodos(
-      todos.map((todo) => {
-        if (todo.id !== Number(e.target.id)) return todo;
-        return {
-          ...todo,
-          content: e.target.value,
-        };
-      })
-    );
+    dispatch(editTodo(e.target.id, e.target.value));
   }
 
   // clear finished todos
   function handleClearTodos() {
-    setTodos(todos.filter((todo) => !todo.isDone));
+    dispatch(clearFinishedTodos());
   }
 
   // set type to show
-  function handleSelectType(e) {
-    const mode = e.target.id;
-    setSelectType(mode);
-    switch (mode) {
-      case "Completed":
-        setTodos(
-          todos.map((todo) => {
-            if (todo.isDone) {
-              return {
-                ...todo,
-                isShowed: true,
-              };
-            }
-            return {
-              ...todo,
-              isShowed: false,
-            };
-          })
-        );
-        break;
-      case "Incomplete":
-        setTodos(
-          todos.map((todo) => {
-            if (!todo.isDone) {
-              return {
-                ...todo,
-                isShowed: true,
-              };
-            }
-            return {
-              ...todo,
-              isShowed: false,
-            };
-          })
-        );
-        break;
-      default:
-        setTodos(
-          todos.map((todo) => {
-            return {
-              ...todo,
-              isShowed: true,
-            };
-          })
-        );
-        break;
-    }
-  }
+  // function handleSelectType(e) {
+  //   const mode = e.target.id;
+  //   setSelectType(mode);
+  //   switch (mode) {
+  //     case "Completed":
+  //       setTodos(
+  //         todos.map((todo) => {
+  //           if (todo.isDone) {
+  //             return {
+  //               ...todo,
+  //               isShowed: true,
+  //             };
+  //           }
+  //           return {
+  //             ...todo,
+  //             isShowed: false,
+  //           };
+  //         })
+  //       );
+  //       break;
+  //     case "Incomplete":
+  //       setTodos(
+  //         todos.map((todo) => {
+  //           if (!todo.isDone) {
+  //             return {
+  //               ...todo,
+  //               isShowed: true,
+  //             };
+  //           }
+  //           return {
+  //             ...todo,
+  //             isShowed: false,
+  //           };
+  //         })
+  //       );
+  //       break;
+  //     default:
+  //       setTodos(
+  //         todos.map((todo) => {
+  //           return {
+  //             ...todo,
+  //             isShowed: true,
+  //           };
+  //         })
+  //       );
+  //       break;
+  //   }
+  // }
 
   return (
     <TypeContext.Provider value={{ selectedType }}>
@@ -130,7 +113,7 @@ function App() {
             handleAddTodo={handleAddTodo}
           />
           <FormButtons
-            handleSelectType={handleSelectType}
+            // handleSelectType={handleSelectType}
             handleClearTodos={handleClearTodos}
           />
           <TodosWrapper>

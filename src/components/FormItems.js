@@ -3,6 +3,7 @@ import { MEDIA_QUERY_MD } from "../constants/style";
 import PropTypes from "prop-types";
 import { TypeContext } from "../contexts";
 import { useContext } from "react";
+import { FILTERS } from "../constants/filter";
 
 const FormWrapper = styled.form`
   box-sizing: border-box;
@@ -96,7 +97,7 @@ export function Form({ value, handleInputChnage, handleAddTodo }) {
 
 export function FormButtons({ handleClearTodos, handleSelectType }) {
   const { selectedType } = useContext(TypeContext);
-  const typeList = ["All", "Completed", "Incomplete"];
+  const typeList = [FILTERS.ALL, FILTERS.COMPLETED, FILTERS.INCOMPLETE];
 
   return (
     <SectionWrapper>
