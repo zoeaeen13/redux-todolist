@@ -5,15 +5,15 @@ import {
   TOGGLE_TODO,
   EDIT_TODO,
   ClEAR_FINISHED_TODOS,
+  SET_FILTER,
 } from "./actionTypes";
 
-export function addTodo(content, isDone, isShowed) {
+export function addTodo(content, isDone) {
   return {
     type: ADD_TODO,
     payload: {
       content,
       isDone,
-      isShowed,
     },
   };
 }
@@ -52,4 +52,11 @@ export function clearFinishedTodos() {
   };
 }
 
-// export const setFilter = filter => ({ type: SET_FILTER, payload: { filter } });
+export function setFilter(filter) {
+  return {
+    type: SET_FILTER,
+    payload: {
+      newFilter: filter,
+    },
+  };
+}

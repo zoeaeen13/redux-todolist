@@ -4,19 +4,20 @@ import { TodoItem } from "./Todoitem";
 import { useState } from "react";
 import { TypeContext } from "../contexts";
 import { useSelector, useDispatch } from "react-redux";
-import { getTodos } from "../redux/selectors";
+import { getFilter, filteredTodos } from "../redux/selectors";
 import {
   addTodo,
   deleteTodo,
   toggleTodo,
   editTodo,
   clearFinishedTodos,
+  setFilter,
 } from "../redux/actions";
 
 function App() {
-  const todos = useSelector(getTodos);
+  const todos = useSelector(filteredTodos);
+  const filter = useSelector(getFilter);
   const dispatch = useDispatch();
-  const [selectedType, setSelectType] = useState("All");
   const [value, setValue] = useState("");
 
   // handle input change
@@ -28,7 +29,7 @@ function App() {
   function handleAddTodo(e) {
     e.preventDefault();
     if (value !== "") {
-      dispatch(addTodo(value, false, selectedType !== "Completed"));
+      dispatch(addTodo(value, false));
       setValue("");
     }
   }
@@ -53,58 +54,12 @@ function App() {
     dispatch(clearFinishedTodos());
   }
 
-  // set type to show
-  // function handleSelectType(e) {
-  //   const mode = e.target.id;
-  //   setSelectType(mode);
-  //   switch (mode) {
-  //     case "Completed":
-  //       setTodos(
-  //         todos.map((todo) => {
-  //           if (todo.isDone) {
-  //             return {
-  //               ...todo,
-  //               isShowed: true,
-  //             };
-  //           }
-  //           return {
-  //             ...todo,
-  //             isShowed: false,
-  //           };
-  //         })
-  //       );
-  //       break;
-  //     case "Incomplete":
-  //       setTodos(
-  //         todos.map((todo) => {
-  //           if (!todo.isDone) {
-  //             return {
-  //               ...todo,
-  //               isShowed: true,
-  //             };
-  //           }
-  //           return {
-  //             ...todo,
-  //             isShowed: false,
-  //           };
-  //         })
-  //       );
-  //       break;
-  //     default:
-  //       setTodos(
-  //         todos.map((todo) => {
-  //           return {
-  //             ...todo,
-  //             isShowed: true,
-  //           };
-  //         })
-  //       );
-  //       break;
-  //   }
-  // }
+  function handleFilter(filter) {
+    dispatch(setFilter(filter));
+  }
 
   return (
-    <TypeContext.Provider value={{ selectedType }}>
+    <TypeContext.Provider value={{ filter }}>
       <div className="App">
         <Wrapper>
           <Form
@@ -113,23 +68,20 @@ function App() {
             handleAddTodo={handleAddTodo}
           />
           <FormButtons
-            // handleSelectType={handleSelectType}
+            handleFilter={handleFilter}
             handleClearTodos={handleClearTodos}
           />
           <TodosWrapper>
             {todos.map((todo) => {
-              if (todo.isShowed) {
-                return (
-                  <TodoItem
-                    key={todo.id}
-                    todo={todo}
-                    handlgeEditTodo={handlgeEditTodo}
-                    handleToggleTodo={handleToggleTodo}
-                    handleDeleteTodo={handleDeleteTodo}
-                  />
-                );
-              }
-              return null;
+              return (
+                <TodoItem
+                  key={todo.id}
+                  todo={todo}
+                  handlgeEditTodo={handlgeEditTodo}
+                  handleToggleTodo={handleToggleTodo}
+                  handleDeleteTodo={handleDeleteTodo}
+                />
+              );
             })}
           </TodosWrapper>
         </Wrapper>

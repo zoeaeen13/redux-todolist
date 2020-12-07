@@ -21,7 +21,6 @@ export default function todoReducer(state = initState, action) {
             id: todoId++,
             content: action.payload.content,
             isDone: action.payload.isDone,
-            isShowed: action.payload.isShowed,
           },
         ],
       };

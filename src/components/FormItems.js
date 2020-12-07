@@ -3,7 +3,7 @@ import { MEDIA_QUERY_MD } from "../constants/style";
 import PropTypes from "prop-types";
 import { TypeContext } from "../contexts";
 import { useContext } from "react";
-import { FILTERS } from "../constants/filter";
+import { FILTERS } from "../constants/filters";
 
 const FormWrapper = styled.form`
   box-sizing: border-box;
@@ -65,12 +65,13 @@ const SectionWrapper = styled.section`
   }
 `;
 
-function RadioButton({ typeName, selectedType, handleClick }) {
+function RadioButton({ typeName, filter, handleFilter }) {
+  const handleClick = () => {
+    handleFilter(typeName);
+  };
   return (
     <label
-      className={`btn btn-secondary ${
-        selectedType === typeName ? "active" : ""
-      }`}
+      className={`btn btn-secondary ${filter === typeName ? "active" : ""}`}
     >
       <input type="radio" name="options" id={typeName} onClick={handleClick} />
       {typeName}
@@ -95,8 +96,8 @@ export function Form({ value, handleInputChnage, handleAddTodo }) {
   );
 }
 
-export function FormButtons({ handleClearTodos, handleSelectType }) {
-  const { selectedType } = useContext(TypeContext);
+export function FormButtons({ handleClearTodos, handleFilter }) {
+  const { filter } = useContext(TypeContext);
   const typeList = [FILTERS.ALL, FILTERS.COMPLETED, FILTERS.INCOMPLETE];
 
   return (
@@ -109,8 +110,8 @@ export function FormButtons({ handleClearTodos, handleSelectType }) {
           <RadioButton
             key={index}
             typeName={type}
-            selectedType={selectedType}
-            handleClick={handleSelectType}
+            filter={filter}
+            handleFilter={handleFilter}
           />
         ))}
       </div>
@@ -120,7 +121,7 @@ export function FormButtons({ handleClearTodos, handleSelectType }) {
 
 RadioButton.propTypes = {
   typeName: PropTypes.string,
-  selectedType: PropTypes.string,
+  filter: PropTypes.string,
   handleClick: PropTypes.func,
 };
 
@@ -132,5 +133,5 @@ Form.propTypes = {
 
 FormButtons.propTypes = {
   handleClearTodos: PropTypes.func,
-  handleSelectType: PropTypes.func,
+  handleFilter: PropTypes.func,
 };
