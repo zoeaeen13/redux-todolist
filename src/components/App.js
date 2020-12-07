@@ -1,7 +1,7 @@
 import { Form, FormButtons } from "./FormItems";
 import { Wrapper, TodosWrapper } from "./Wrappers";
 import { TodoItem } from "./Todoitem";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { TypeContext } from "../contexts";
 import { useSelector, useDispatch } from "react-redux";
 import { getFilter, filteredTodos } from "../redux/selectors";
@@ -60,7 +60,7 @@ function App() {
 
   return (
     <TypeContext.Provider value={{ filter }}>
-      <div className="App">
+      <Fragment>
         <Wrapper>
           <Form
             value={value}
@@ -85,7 +85,7 @@ function App() {
             })}
           </TodosWrapper>
         </Wrapper>
-      </div>
+      </Fragment>
     </TypeContext.Provider>
   );
 }
