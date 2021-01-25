@@ -54,6 +54,7 @@ function App() {
     dispatch(clearFinishedTodos());
   }
 
+  // change filter
   function handleFilter(filter) {
     dispatch(setFilter(filter));
   }

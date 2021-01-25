@@ -1,9 +1,5 @@
 import { FILTERS } from "../constants/filters";
 
-export const getTodos = (store) => {
-  return store.todoReducer.todos;
-};
-
 export const getFilter = (store) => {
   return store.filterReducer;
 };
